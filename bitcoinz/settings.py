@@ -25,7 +25,10 @@ SECRET_KEY = '&jdn@(!u-#9%t*g$@c5fofs^(qw+ou9zyzk=@_)j*ho7%iw==@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost'
+]
 
 
 # Application definition
@@ -37,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework'
+    'rest_framework',
+    'coinz'
 ]
 
 MIDDLEWARE = [
@@ -120,5 +124,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_PATH/'static'
+    BASE_DIR/'static'
 ]
