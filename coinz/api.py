@@ -18,20 +18,44 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import pytz
 import requests
+import json
 
 
+def store_api_call(data):
+    headers = {
+        "Content-Type": "application/json",
+    }
+    valid_data = json.dumps({
+        "book": "btc_mxn",
+        "created_at": data["created_at"],
+        "high": data["high"],
+        "volume": data["volume"],
+        "low": data["low"],
+        "last": None,
+        "vwap": None,
+        "ask": None,
+        "bid": None
+    })
+
+    requests.post(
+        "http://localhost:8000/coinz/api/",
+        headers=headers,
+        data=valid_data
+    )
 
 
 def make_bitso_call(request):
     if request.method == "GET":
         r = requests.get("https://api.bitso.com/v3/ticker/?book=btc_mxn")
-        return JsonResponse(r.json()["payload"])
+        data = r.json()["payload"]
+        store_api_call(data)
+        return JsonResponse(data)
 
 
 class CoinzAPI(ListCreateAPIView):
     serializer_class = CoinSerializer
     queryset = Coin.objects.all()
-
+        
     def post(self, request):
         serializer = CoinSerializer(data=request.data)
         print(serializer)
@@ -85,7 +109,7 @@ class CoinzByWeekAPI(ListAPIView):
 
     def list(self, request, *args, **kwargs):
 
-        datetime_interval = datetime.utcnow() - timedelta(weeks=1)
+        datetime_interval = datetime.utcnow() - timedelta(weeks=2)
         queryset = Coin.objects.filter(created_at__gte=datetime_interval).order_by("created_at")
         
         serializer = CoinSerializer(queryset, many=True)
@@ -164,10 +188,3 @@ class CoinzDateRangeAPI(ListAPIView):
             serializer.data,
             status=status.HTTP_200_OK
         )
-
-
-
-"""
-    Coin.objects.annotate(month=Extract("created_at", lookup_name="month")).values("month").annotate(count=Count("id")).values("month", "count")
-    Coin.objects.annotate(date=Trunc("created_at", "week")).values("date").annotate(count=Count("id")).count()
-"""
