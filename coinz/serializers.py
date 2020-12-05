@@ -9,6 +9,7 @@ class CoinSerializer(serializers.ModelSerializer):
         model = Coin
         fields = [
             "id",
+            "book",
             "created_at",
             "volume",
             "high",
