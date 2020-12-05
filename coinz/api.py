@@ -30,7 +30,7 @@ def make_bitso_call(request):
 
 class CoinzAPI(ListCreateAPIView):
     serializer_class = CoinSerializer
-    queryset = Coin.objects.all()[:10]
+    queryset = Coin.objects.all()
 
 
 class CoinzLast24API(ListAPIView):
@@ -118,7 +118,7 @@ class CoinzByYearAPI(ListAPIView):
         serializer = CoinSerializer(queryset, many=True)
 
         return Response(
-            serializer.data[:25],
+            serializer.data,
             status=status.HTTP_200_OK
         )
 
