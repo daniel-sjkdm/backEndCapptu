@@ -133,9 +133,9 @@ class CoinzDateRangeAPI(ListAPIView):
 
     def list(self, request, *args, **kwargs):
 
-        date1 = request.query_params.get("date1").strip()
+        date1 = request.query_params.get("date1").strip().replace("-", "/")
         date1 = datetime.strptime(date1, "%Y/%m/%d")
-        date2 = request.query_params.get("date2").strip()
+        date2 = request.query_params.get("date2").strip().replace("-", "/")
         date2 = datetime.strptime(date2, "%Y/%m/%d")
 
         queryset = Coin.objects.filter(
